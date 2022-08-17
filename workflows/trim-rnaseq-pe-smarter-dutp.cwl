@@ -53,13 +53,19 @@ inputs:
     doc: "GTF or TAB-separated annotation file"
 
   fastq_file_upstream:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     label: "FASTQ read 1 input file"
     format: "http://edamontology.org/format_1930"
     doc: "Reads data in a FASTQ format, received after paired end sequencing"
 
   fastq_file_downstream:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     label: "FASTQ read 2 input file"
     format: "http://edamontology.org/format_1930"
     doc: "Reads data in a FASTQ format, received after paired end sequencing"
@@ -353,12 +359,16 @@ steps:
   extract_fastq_upstream:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "read_1"
       compressed_file: fastq_file_downstream
     out: [fastq_file]
 
   extract_fastq_downstream:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "read_2"
       compressed_file: fastq_file_upstream
     out: [fastq_file]
 

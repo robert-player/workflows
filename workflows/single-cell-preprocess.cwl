@@ -23,13 +23,19 @@ inputs:
       position: 1
 
   fastq_file_1:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     format: "http://edamontology.org/format_1930"
     label: "FASTQ file 1 (optionally compressed)"
     doc: "FASTQ file 1 (optionally compressed)"
 
   fastq_file_2:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     format: "http://edamontology.org/format_1930"
     label: "FASTQ file 2 (optionally compressed)"
     doc: "FASTQ file 2 (optionally compressed)"
@@ -237,6 +243,8 @@ steps:
   extract_fastq_1:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "read_1"
       compressed_file: fastq_file_1
     out:
     - fastq_file
@@ -244,6 +252,8 @@ steps:
   extract_fastq_2:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "read_2"
       compressed_file: fastq_file_2
     out:
     - fastq_file

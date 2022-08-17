@@ -30,31 +30,46 @@ inputs:
     'sd:localLabel': true
 
   gex_fastq_file_r1:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     format: "http://edamontology.org/format_1930"
     label: "GEX FASTQ file R1 (optionally compressed)"
     doc: "GEX FASTQ file R1 (optionally compressed)"
 
   gex_fastq_file_r2:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     format: "http://edamontology.org/format_1930"
     label: "GEX FASTQ file R2 (optionally compressed)"
     doc: "GEX FASTQ file R2 (optionally compressed)"
 
   atac_fastq_file_r1:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     format: "http://edamontology.org/format_1930"
     label: "ATAC FASTQ file R1 (optionally compressed)"
     doc: "ATAC FASTQ file R1 (optionally compressed)"
 
   atac_fastq_file_r2:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     format: "http://edamontology.org/format_1930"
     label: "ATAC FASTQ file R2 (optionally compressed)"
     doc: "ATAC FASTQ file R2 (optionally compressed)"
 
   atac_fastq_file_r3:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     format: "http://edamontology.org/format_1930"
     label: "ATAC FASTQ file R3 (optionally compressed)"
     doc: "ATAC FASTQ file R3 (optionally compressed)"
@@ -352,6 +367,8 @@ steps:
   extract_gex_fastq_r1:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "gex_read_1"
       compressed_file: gex_fastq_file_r1
     out:
     - fastq_file
@@ -359,6 +376,8 @@ steps:
   extract_gex_fastq_r2:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "gex_read_2"
       compressed_file: gex_fastq_file_r2
     out:
     - fastq_file
@@ -366,6 +385,8 @@ steps:
   extract_atac_fastq_r1:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix: 
+        default: "atac_read_1"
       compressed_file: atac_fastq_file_r1
     out:
     - fastq_file
@@ -373,6 +394,8 @@ steps:
   extract_atac_fastq_r2:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:
+        default: "atac_read_2"
       compressed_file: atac_fastq_file_r2
     out:
     - fastq_file
@@ -380,6 +403,8 @@ steps:
   extract_atac_fastq_r3:
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix: 
+        default: "atac_read_3"
       compressed_file: atac_fastq_file_r3
     out:
     - fastq_file

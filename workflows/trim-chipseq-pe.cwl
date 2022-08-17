@@ -64,13 +64,19 @@ inputs:
     doc: "Set to call broad peak for MACS2"
 
   fastq_file_upstream:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     label: "FASTQ 1 input file"
     format: "http://edamontology.org/format_1930"
     doc: "Reads data in a FASTQ format, received after paired end sequencing"
 
   fastq_file_downstream:
-    type: File
+    type:
+    - File
+    - type: array
+      items: File
     label: "FASTQ 2 input file"
     format: "http://edamontology.org/format_1930"
     doc: "Reads data in a FASTQ format, received after paired end sequencing"
@@ -484,6 +490,8 @@ steps:
       the core facility by providing a URL or from GEO by providing SRA accession number.
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "read_1"
       compressed_file: fastq_file_upstream
     out: [fastq_file]
 
@@ -495,6 +503,8 @@ steps:
       the core facility by providing a URL or from GEO by providing SRA accession number.
     run: ../tools/extract-fastq.cwl
     in:
+      output_prefix:  
+        default: "read_2"
       compressed_file: fastq_file_downstream
     out: [fastq_file]
 
