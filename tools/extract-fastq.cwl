@@ -15,7 +15,7 @@ hints:
 
 inputs:
 
-  script:
+  script_command:
     type: string?
     default: |
       #!/bin/bash
@@ -88,7 +88,7 @@ outputs:
   fastq_file:
     type: File
     outputBinding:
-      glob: "*"
+      glob: "*.fastq"
 
 
 baseCommand: [bash, '-c']
