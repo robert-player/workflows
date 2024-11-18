@@ -31,7 +31,7 @@ hints:
 
 inputs:
 
-  bash_script:
+  script:
     type: string?
     default: |
       #!/bin/bash
@@ -44,7 +44,9 @@ inputs:
         trim_galore "${@:1}"
       else
         echo "Skip run trimgalore"
-        echo "Skip run trimgalore" >> error_report.txt
+      fi
+      if [[ $(grep "Premature end of file encountered" error_msg.txt) != "" ]]; then
+        echo "Premature end of file encountered, fastq is likely truncated or misformatted." >> error_report.txt
       fi
     inputBinding:
       position: 1

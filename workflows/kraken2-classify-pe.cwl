@@ -188,7 +188,7 @@ outputs:
     - markdownView:
         tab: 'Overview'
 
-  krona_plot_linkout:
+  krona_plot_link:
     type: File
     format: "http://edamontology.org/format_2331"
     label: "Krona plot - hierarchical visualization of taxonomic classifications"
