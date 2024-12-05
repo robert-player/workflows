@@ -98,7 +98,7 @@ outputs:
     doc: Generated statistics file
 
 
-baseCommand: ["printf 'fastx-quality-stats.cwl\n$(date)\n';", " fastx_quality_stats"]
+baseCommand: [fastx_quality_stats]
 stdout: error_msg.txt
 stderr: error_msg.txt
 
