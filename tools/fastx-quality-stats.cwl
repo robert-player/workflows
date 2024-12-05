@@ -71,6 +71,7 @@ inputs:
     doc: |
       Output file to store generated statistics. If not provided - return from default_output_filename function
 
+
 outputs:
 
   error_msg:
@@ -96,7 +97,10 @@ outputs:
         }
     doc: Generated statistics file
 
-baseCommand: [fastx_quality_stats]
+
+baseCommand: ["printf 'fastx-quality-stats.cwl\n$(date)\n'; fastx_quality_stats"]
+stdout: error_msg.txt
+stderr: error_msg.txt
 
 
 label: "fastx-quality-stats"
