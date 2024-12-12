@@ -51,72 +51,32 @@ inputs:
 
 outputs:
 
+  error_msg:
+    type: File?
+    outputBinding:
+      glob: "error_msg.txt"
+
+  error_report:
+    type: File?
+    outputBinding:
+      glob: "error_report.txt"
+
   annotation_gtf_file:
     type: File
     outputBinding:
       glob: $(default_output_filename())
     doc: "GTF annotation file"
 
-  stdout_log:
-    type: stdout
-
-  stderr_log:
-    type: stderr
-
 
 baseCommand: ["bash", "-c"]
+stdout: error_msg.txt
+stderr: error_msg.txt
 
 
-stdout: genepredtogtf_stdout.log
-stderr: genepredtogtf_stderr.log
-
-
-$namespaces:
-  s: http://schema.org/
-
-$schemas:
-- https://github.com/schemaorg/schemaorg/raw/main/data/releases/11.01/schemaorg-current-http.rdf
-
-s:name: "ucsc-genepredtogtf"
-s:downloadUrl: https://raw.githubusercontent.com/Barski-lab/workflows/master/tools/ucsc-genepredtogtf.cwl
-s:codeRepository: https://github.com/Barski-lab/workflows
-s:license: http://www.apache.org/licenses/LICENSE-2.0
-
-s:isPartOf:
-  class: s:CreativeWork
-  s:name: Common Workflow Language
-  s:url: http://commonwl.org/
-
-s:creator:
-- class: s:Organization
-  s:legalName: "Cincinnati Children's Hospital Medical Center"
-  s:location:
-  - class: s:PostalAddress
-    s:addressCountry: "USA"
-    s:addressLocality: "Cincinnati"
-    s:addressRegion: "OH"
-    s:postalCode: "45229"
-    s:streetAddress: "3333 Burnet Ave"
-    s:telephone: "+1(513)636-4200"
-  s:logo: "https://www.cincinnatichildrens.org/-/media/cincinnati%20childrens/global%20shared/childrens-logo-new.png"
-  s:department:
-  - class: s:Organization
-    s:legalName: "Allergy and Immunology"
-    s:department:
-    - class: s:Organization
-      s:legalName: "Barski Research Lab"
-      s:member:
-      - class: s:Person
-        s:name: Michael Kotliar
-        s:email: mailto:misha.kotliar@gmail.com
-        s:sameAs:
-        - id: http://orcid.org/0000-0002-6486-3898
-
-
+label: "ucsc-genepredtogtf"
 doc: |
   genePredToGtf - Convert genePred table or file to gtf
 
-s:about: |
   usage:
     genePredToGtf database genePredTable output.gtf
   

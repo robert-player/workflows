@@ -3,14 +3,17 @@ class: CommandLineTool
 
 
 requirements:
-- class: InlineJavascriptRequirement
-  expressionLib:
-  - var default_output_filename = function() {
-          var basename = inputs.bedgraph_file.location.split('/').slice(-1)[0];
-          var root = basename.split('.').slice(0,-1).join('.');
-          var ext = ".bigWig";
-          return (root == "")?basename+ext:root+ext;
-        };
+  - class: ResourceRequirement
+    ramMin: 15250
+    coresMin: 1
+  - class: InlineJavascriptRequirement
+    expressionLib:
+    - var default_output_filename = function() {
+            var basename = inputs.bedgraph_file.location.split('/').slice(-1)[0];
+            var root = basename.split('.').slice(0,-1).join('.');
+            var ext = ".bigWig";
+            return (root == "")?basename+ext:root+ext;
+          };
 
 
 hints:
@@ -80,6 +83,16 @@ inputs:
 
 outputs:
 
+  error_msg:
+    type: File?
+    outputBinding:
+      glob: "error_msg.txt"
+
+  error_report:
+    type: File?
+    outputBinding:
+      glob: "error_report.txt"
+
   bigwig_file:
     type: File
     outputBinding:
@@ -94,63 +107,17 @@ outputs:
 
 
 baseCommand: ["bedGraphToBigWig"]
+stdout: error_msg.txt
+stderr: error_msg.txt
 
 
-$namespaces:
-  s: http://schema.org/
-
-$schemas:
-- https://github.com/schemaorg/schemaorg/raw/main/data/releases/11.01/schemaorg-current-http.rdf
-
-s:mainEntity:
-  $import: ./metadata/ucsc-metadata.yaml
-
-s:name: "ucsc-bedgraphtobigwig"
-s:downloadUrl: https://raw.githubusercontent.com/Barski-lab/workflows/master/tools/ucsc-bedgraphtobigwig.cwl
-s:codeRepository: https://github.com/Barski-lab/workflows
-s:license: http://www.apache.org/licenses/LICENSE-2.0
-
-s:isPartOf:
-  class: s:CreativeWork
-  s:name: Common Workflow Language
-  s:url: http://commonwl.org/
-
-s:creator:
-- class: s:Organization
-  s:legalName: "Cincinnati Children's Hospital Medical Center"
-  s:location:
-  - class: s:PostalAddress
-    s:addressCountry: "USA"
-    s:addressLocality: "Cincinnati"
-    s:addressRegion: "OH"
-    s:postalCode: "45229"
-    s:streetAddress: "3333 Burnet Ave"
-    s:telephone: "+1(513)636-4200"
-  s:logo: "https://www.cincinnatichildrens.org/-/media/cincinnati%20childrens/global%20shared/childrens-logo-new.png"
-  s:department:
-  - class: s:Organization
-    s:legalName: "Allergy and Immunology"
-    s:department:
-    - class: s:Organization
-      s:legalName: "Barski Research Lab"
-      s:member:
-      - class: s:Person
-        s:name: Andrey Kartashov
-        s:email: mailto:Andrey.Kartashov@cchmc.org
-        s:sameAs:
-        - id: http://orcid.org/0000-0001-9102-5681
-      - class: s:Person
-        s:name: Michael Kotliar
-        s:email: mailto:misha.kotliar@gmail.com
-        s:sameAs:
-        - id: http://orcid.org/0000-0002-6486-3898
+label: "ucsc-bedgraphtobigwig"
 doc: |
   Tool converts bedGraph to bigWig file.
 
   `default_output_filename` function returns filename for generated bigWig if `output_filename` is not provided.
   Default filename is generated on the base of `bedgraph_file` basename with the updated to `*.bigWig` extension.
 
-s:about: |
   usage:
      bedGraphToBigWig in.bedGraph chrom.sizes out.bw
   where in.bedGraph is a four column file in the format:

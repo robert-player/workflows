@@ -3,28 +3,31 @@ class: CommandLineTool
 
 
 requirements:
-- class: ShellCommandRequirement
-- class: InlineJavascriptRequirement
-  expressionLib:
-  - var ext = function() {
-      if (inputs.csi && !inputs.bai){
-        return '.csi';
-      } else {
-        return '.bai';
-      }
-    };
-  - var default_bam = function() {
-      if (inputs.trigger == true){
-        return inputs.sort_input.location.split('/').slice(-1)[0].split('.').slice(0,-1).join('.')+".bam";
-      } else {
-        return inputs.sort_input.location.split('/').slice(-1)[0];
-      }
-    };
+  - class: ResourceRequirement
+    ramMin: 30510
+    coresMin: 8
+  - class: ShellCommandRequirement
+  - class: InlineJavascriptRequirement
+    expressionLib:
+    - var ext = function() {
+        if (inputs.csi && !inputs.bai){
+          return '.csi';
+        } else {
+          return '.bai';
+        }
+      };
+    - var default_bam = function() {
+        if (inputs.trigger == true){
+          return inputs.sort_input.location.split('/').slice(-1)[0].split('.').slice(0,-1).join('.')+".bam";
+        } else {
+          return inputs.sort_input.location.split('/').slice(-1)[0];
+        }
+      };
 
 
 hints:
-- class: DockerRequirement
-  dockerPull: biowardrobe2/samtools:v1.4
+  - class: DockerRequirement
+    dockerPull: biowardrobe2/samtools:v1.4
 
 
 inputs:
@@ -33,6 +36,8 @@ inputs:
     type: string?
     default: |
       #!/bin/bash
+      exec 1>> error_msg.txt 2>>&1
+      printf "samtools-sort-index.cwl\n$(date)\nbash_script_sort\n"
       if [ "$0" = "true" ]
       then
         echo "Run: samtools sort " ${@:1}
@@ -52,6 +57,8 @@ inputs:
     type: string?
     default: |
       #!/bin/bash
+      exec 1>> error_msg.txt 2>>&1
+      printf "samtools-sort-index.cwl\n$(date)\nbash_script_index\n"
       if [ "$0" = "true" ]
       then
         echo "Run: samtools index " ${@:1}
@@ -132,6 +139,16 @@ inputs:
 
 outputs:
 
+  error_msg:
+    type: File?
+    outputBinding:
+      glob: "error_msg.txt"
+
+  error_report:
+    type: File?
+    outputBinding:
+      glob: "error_report.txt"
+
   bam_bai_pair:
     type: File
     outputBinding:
@@ -208,50 +225,8 @@ arguments:
       }
     position: 27
 
-$namespaces:
-  s: http://schema.org/
 
-$schemas:
-- https://github.com/schemaorg/schemaorg/raw/main/data/releases/11.01/schemaorg-current-http.rdf
-
-s:mainEntity:
-  $import: ./metadata/samtools-metadata.yaml
-
-s:name: "samtools-sort-index"
-s:downloadUrl: https://raw.githubusercontent.com/Barski-lab/workflows/master/tools/samtools-sort-index.cwl
-s:codeRepository: https://github.com/Barski-lab/workflows
-s:license: http://www.apache.org/licenses/LICENSE-2.0
-
-s:isPartOf:
-  class: s:CreativeWork
-  s:name: Common Workflow Language
-  s:url: http://commonwl.org/
-
-s:creator:
-- class: s:Organization
-  s:legalName: "Cincinnati Children's Hospital Medical Center"
-  s:location:
-  - class: s:PostalAddress
-    s:addressCountry: "USA"
-    s:addressLocality: "Cincinnati"
-    s:addressRegion: "OH"
-    s:postalCode: "45229"
-    s:streetAddress: "3333 Burnet Ave"
-    s:telephone: "+1(513)636-4200"
-  s:logo: "https://www.cincinnatichildrens.org/-/media/cincinnati%20childrens/global%20shared/childrens-logo-new.png"
-  s:department:
-  - class: s:Organization
-    s:legalName: "Allergy and Immunology"
-    s:department:
-    - class: s:Organization
-      s:legalName: "Barski Research Lab"
-      s:member:
-      - class: s:Person
-        s:name: Michael Kotliar
-        s:email: mailto:misha.kotliar@gmail.com
-        s:sameAs:
-        - id: http://orcid.org/0000-0002-6486-3898
-
+label: "samtools-sort-index"
 doc: |
   Tool to sort and index input BAM/SAM/CRAM.
   If input `trigger` is set to `true` or isn't set at all (`true` is used by default), run `samtools sort` and

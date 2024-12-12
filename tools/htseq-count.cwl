@@ -2,9 +2,15 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 
+requirements:
+  - class: ResourceRequirement
+    ramMin: 7024
+    coresMin: 1
+
+
 hints:
-- class: DockerRequirement
-  dockerPull: quay.io/biocontainers/htseq:0.13.5--py38h1773678_0
+  - class: DockerRequirement
+    dockerPull: quay.io/biocontainers/htseq:0.13.5--py38h1773678_0
 
 
 inputs:
@@ -13,6 +19,8 @@ inputs:
     type: string?
     default: |
       #!/bin/bash
+      exec 1>> error_msg.txt 2>>&1
+      printf "htseq-count.cwl\n$(date)\n"
       shopt -s nocaseglob
       set -- "$0" "$@"
       echo "Run htseq-count with the following parameters"
@@ -201,6 +209,16 @@ inputs:
 
 outputs:
   
+  error_msg:
+    type: File?
+    outputBinding:
+      glob: "error_msg.txt"
+
+  error_report:
+    type: File?
+    outputBinding:
+      glob: "error_report.txt"
+
   feature_counts_report_file:
     type: File
     outputBinding:
@@ -220,51 +238,7 @@ outputs:
 baseCommand: ["bash", "-c"]
 
 
-$namespaces:
-  s: http://schema.org/
-
-$schemas:
-- https://github.com/schemaorg/schemaorg/raw/main/data/releases/11.01/schemaorg-current-http.rdf
-
-label: "HTSeq: Analysing high-throughput sequencing data"
-s:name: "HTSeq: Analysing high-throughput sequencing data"
-s:alternateName: "HTSeq: Analysing high-throughput sequencing data"
-
-s:downloadUrl: https://raw.githubusercontent.com/Barski-lab/workflows/master/tools/htseq-count.cwl
-s:codeRepository: https://github.com/Barski-lab/workflows
-s:license: http://www.apache.org/licenses/LICENSE-2.0
-
-s:isPartOf:
-  class: s:CreativeWork
-  s:name: Common Workflow Language
-  s:url: http://commonwl.org/
-
-s:creator:
-- class: s:Organization
-  s:legalName: "Cincinnati Children's Hospital Medical Center"
-  s:location:
-  - class: s:PostalAddress
-    s:addressCountry: "USA"
-    s:addressLocality: "Cincinnati"
-    s:addressRegion: "OH"
-    s:postalCode: "45229"
-    s:streetAddress: "3333 Burnet Ave"
-    s:telephone: "+1(513)636-4200"
-  s:logo: "https://www.cincinnatichildrens.org/-/media/cincinnati%20childrens/global%20shared/childrens-logo-new.png"
-  s:department:
-  - class: s:Organization
-    s:legalName: "Allergy and Immunology"
-    s:department:
-    - class: s:Organization
-      s:legalName: "Barski Research Lab"
-      s:member:
-      - class: s:Person
-        s:name: Michael Kotliar
-        s:email: mailto:misha.kotliar@gmail.com
-        s:sameAs:
-        - id: http://orcid.org/0000-0002-6486-3898
-
-
+label: "htseq-count"
 doc: |
   For convenience to use in the workflow that sort and index BAM files by coordinate
   this tools expects coordinate sorted and indexed BAM file as input. For single-read
@@ -275,7 +249,6 @@ doc: |
     - only one `--additional-attr` is supported
     - skip `--nprocesses` parameter as it's not helpful when we use only one input BAM file
 
-s:about: |
   usage: htseq-count [options] alignment_file gff_file
 
   This script takes one or more alignment files in SAM/BAM format and a feature file

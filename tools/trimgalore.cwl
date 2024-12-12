@@ -4,7 +4,7 @@ class: CommandLineTool
 
 requirements:
   - class: ResourceRequirement
-    ramMin: 7024                    # equal to ~8GB
+    ramMin: 7024
     coresMin: 1
   - class: InlineJavascriptRequirement
     expressionLib:

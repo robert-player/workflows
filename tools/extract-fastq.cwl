@@ -5,7 +5,7 @@ class: CommandLineTool
 requirements:
   - class: ShellCommandRequirement
   - class: ResourceRequirement
-    ramMin: 7024                    # equal to ~8GB
+    ramMin: 7024
     coresMin: 1
 
 hints:

@@ -117,15 +117,6 @@ inputs:
     'sd:layout':
       advanced: true
 
-# System dependent
-
-  threads:
-    type: int?
-    default: 2
-    'sd:layout':
-      advanced: true
-    label: "Number of threads"
-    doc: "Number of threads for those steps that support multithreading"
 
 outputs:
 
@@ -480,7 +471,8 @@ steps:
         default: 15
       clip3pNbases: clip_3p_end
       clip5pNbases: clip_5p_end
-      threads: threads
+      threads:
+        default: 16
     out:
       - aligned_file
       - log_final
@@ -509,7 +501,8 @@ steps:
       sort_output_filename:
         source: rename_upstream/target_file
         valueFrom: $(self.location.split('/').slice(-1)[0].split('.').slice(0,-1).join('.')+'.bam')
-      threads: threads
+      threads:
+        default: 8
     out: [bam_bai_pair]
 
   bam_to_bigwig:
@@ -538,7 +531,8 @@ steps:
         default: "unaligned_reads"
       sam:
         default: true
-      threads: threads
+      threads:
+        default: 8
     out: [log_file]
 
   rpkm_calculation:
@@ -549,7 +543,8 @@ steps:
       rpkm_threshold:
         default: 0.001
       exclude_chr: exclude_chr
-      threads: threads
+      threads:
+        default: 8
     out: [isoforms_file]
 
   group_isoforms:
@@ -615,7 +610,8 @@ steps:
       minimum_rpkm: minimum_rpkm
       pair:
         default: true
-      threads: threads
+      threads:
+        default: 4
     out:
     - gene_body_report_file
     - gene_body_plot_pdf

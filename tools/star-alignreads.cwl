@@ -2,19 +2,22 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
-- class: InlineJavascriptRequirement
-  expressionLib:
-  - var default_output_name_prefix = function() {
-        if (Array.isArray(inputs.readFilesIn) && inputs.readFilesIn.length > 0){
-          return inputs.readFilesIn[0].location.split('/').slice(-1)[0].split('.').slice(0,-1).join('.')+".";
-        } else {
-          return inputs.readFilesIn.location.split('/').slice(-1)[0].split('.').slice(0,-1).join('.')+".";
-        }
-    };
+  - class: ResourceRequirement
+    ramMin: 61030
+    coresMin: 16
+  - class: InlineJavascriptRequirement
+    expressionLib:
+    - var default_output_name_prefix = function() {
+          if (Array.isArray(inputs.readFilesIn) && inputs.readFilesIn.length > 0){
+            return inputs.readFilesIn[0].location.split('/').slice(-1)[0].split('.').slice(0,-1).join('.')+".";
+          } else {
+            return inputs.readFilesIn.location.split('/').slice(-1)[0].split('.').slice(0,-1).join('.')+".";
+          }
+      };
 
 hints:
-- class: DockerRequirement
-  dockerPull: scidap/star:v2.7.5c
+  - class: DockerRequirement
+    dockerPull: scidap/star:v2.7.5c
 
 
 inputs:
@@ -1409,7 +1412,19 @@ inputs:
       0
       int>0: minimum mapped length for a read mate that is spliced
 
+
 outputs:
+
+  error_msg:
+    type: File?
+    outputBinding:
+      glob: "error_msg.txt"
+
+  error_report:
+    type: File?
+    outputBinding:
+      glob: "error_report.txt"
+
   aligned_file:
     type: File
     outputBinding:
@@ -1461,60 +1476,18 @@ outputs:
           return parseInt(self[0].contents.match(uniquelyMappedReadsNumberRegex)[0].split(/\|\t/g)[1]);
         }
 
+
 baseCommand: [STAR]
 arguments: ["--runMode", "alignReads"]
+stdout: error_msg.txt
+stderr: error_msg.txt
 
 
-$namespaces:
-  s: http://schema.org/
-$schemas:
-- https://github.com/schemaorg/schemaorg/raw/main/data/releases/11.01/schemaorg-current-http.rdf
-
-s:name: "star-alignreads"
-s:downloadUrl: https://raw.githubusercontent.com/Barski-lab/workflows/master/tools/star-alignreads.cwl
-s:codeRepository: https://github.com/Barski-lab/workflows
-s:license: http://www.apache.org/licenses/LICENSE-2.0
-
-s:isPartOf:
-  class: s:CreativeWork
-  s:name: Common Workflow Language
-  s:url: http://commonwl.org/
-
-s:mainEntity:
-  $import: ./metadata/star-metadata.yaml
-
-s:creator:
-- class: s:Organization
-  s:legalName: "Cincinnati Children's Hospital Medical Center"
-  s:location:
-  - class: s:PostalAddress
-    s:addressCountry: "USA"
-    s:addressLocality: "Cincinnati"
-    s:addressRegion: "OH"
-    s:postalCode: "45229"
-    s:streetAddress: "3333 Burnet Ave"
-    s:telephone: "+1(513)636-4200"
-  s:logo: "https://www.cincinnatichildrens.org/-/media/cincinnati%20childrens/global%20shared/childrens-logo-new.png"
-  s:department:
-  - class: s:Organization
-    s:legalName: "Allergy and Immunology"
-    s:department:
-    - class: s:Organization
-      s:legalName: "Barski Research Lab"
-      s:member:
-      - class: s:Person
-        s:name: Michael Kotliar
-        s:email: mailto:misha.kotliar@gmail.com
-        s:sameAs:
-        - id: http://orcid.org/0000-0002-6486-3898
-
+label: "star-alignreads"
 doc: |
   Tool runs STAR alignReads.
 
   `default_output_name_prefix` function returns output files prefix if `outFileNamePrefix` is not set. By default prefix
   is equal to basename of `readFilesIn`.
 
-s:about: |
   Usage: STAR  [options]... --genomeDir REFERENCE   --readFilesIn R1.fq R2.fq
-
-

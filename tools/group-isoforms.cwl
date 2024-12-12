@@ -3,7 +3,10 @@ class: CommandLineTool
 
 
 requirements:
-- class: InlineJavascriptRequirement
+  - class: ResourceRequirement
+    ramMin: 7024
+    coresMin: 1
+  - class: InlineJavascriptRequirement
 
 
 hints:
@@ -37,6 +40,16 @@ inputs:
 
 outputs:
 
+  error_msg:
+    type: File?
+    outputBinding:
+      glob: "error_msg.txt"
+
+  error_report:
+    type: File?
+    outputBinding:
+      glob: "error_report.txt"
+
   genes_file:
     type: File
     outputBinding:
@@ -51,6 +64,8 @@ outputs:
 
 
 baseCommand: ["get_gene_n_tss.R"]
+stdout: error_msg.txt
+stderr: error_msg.txt
 
 
 $namespaces:

@@ -2,46 +2,49 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
-- class: ShellCommandRequirement
-- class: InlineJavascriptRequirement
-  expressionLib:
-  - var default_output_filename = function(ext) {
-      if (inputs.output_filename != "" && !ext){
-         return inputs.output_filename;
-      }
-      ext = ext || ".sam";
-      var root = "";
-      if (inputs.output_filename != ""){
-         root = inputs.output_filename.split('.').slice(0,-1).join('.');
-         return (root == "")?inputs.output_filename+ext:root+ext;
-      } else
-        if (Array.isArray(inputs.upstream_filelist) && inputs.upstream_filelist.length > 0){
-          root = inputs.upstream_filelist[0].basename.split('.').slice(0,-1).join('.');
-          return (root == "")?inputs.upstream_filelist[0].basename+ext:root+ext;
+  - class: ResourceRequirement
+    ramMin: 30510
+    coresMin: 8
+  - class: ShellCommandRequirement
+  - class: InlineJavascriptRequirement
+    expressionLib:
+    - var default_output_filename = function(ext) {
+        if (inputs.output_filename != "" && !ext){
+          return inputs.output_filename;
+        }
+        ext = ext || ".sam";
+        var root = "";
+        if (inputs.output_filename != ""){
+          root = inputs.output_filename.split('.').slice(0,-1).join('.');
+          return (root == "")?inputs.output_filename+ext:root+ext;
         } else
-          if (inputs.upstream_filelist != null){
-            root = inputs.upstream_filelist.basename.split('.').slice(0,-1).join('.');
-            return (root == "")?inputs.upstream_filelist.basename+ext:root+ext;
+          if (Array.isArray(inputs.upstream_filelist) && inputs.upstream_filelist.length > 0){
+            root = inputs.upstream_filelist[0].basename.split('.').slice(0,-1).join('.');
+            return (root == "")?inputs.upstream_filelist[0].basename+ext:root+ext;
           } else
-            if (Array.isArray(inputs.downstream_filelist) && inputs.downstream_filelist.length > 0){
-              root = inputs.downstream_filelist[0].basename.split('.').slice(0,-1).join('.');
-              return (root == "")?inputs.downstream_filelist[0].basename+ext:root+ext;
+            if (inputs.upstream_filelist != null){
+              root = inputs.upstream_filelist.basename.split('.').slice(0,-1).join('.');
+              return (root == "")?inputs.upstream_filelist.basename+ext:root+ext;
             } else
-              if (inputs.downstream_filelist != null){
-                root = inputs.downstream_filelist.basename.split('.').slice(0,-1).join('.');
-                return (root == "")?inputs.downstream_filelist.basename+ext:root+ext;
+              if (Array.isArray(inputs.downstream_filelist) && inputs.downstream_filelist.length > 0){
+                root = inputs.downstream_filelist[0].basename.split('.').slice(0,-1).join('.');
+                return (root == "")?inputs.downstream_filelist[0].basename+ext:root+ext;
               } else
-                if (Array.isArray(inputs.crossbow_filelist) && inputs.crossbow_filelist.length > 0){
-                  root = inputs.crossbow_filelist[0].basename.split('.').slice(0,-1).join('.');
-                  return (root == "")?inputs.crossbow_filelist[0].basename+ext:root+ext;
+                if (inputs.downstream_filelist != null){
+                  root = inputs.downstream_filelist.basename.split('.').slice(0,-1).join('.');
+                  return (root == "")?inputs.downstream_filelist.basename+ext:root+ext;
                 } else
-                  if (inputs.crossbow_filelist != null){
-                    root = inputs.crossbow_filelist.basename.split('.').slice(0,-1).join('.');
-                    return (root == "")?inputs.crossbow_filelist.basename+ext:root+ext;
-                  } else {
-                    return null;
-                  }
-    };
+                  if (Array.isArray(inputs.crossbow_filelist) && inputs.crossbow_filelist.length > 0){
+                    root = inputs.crossbow_filelist[0].basename.split('.').slice(0,-1).join('.');
+                    return (root == "")?inputs.crossbow_filelist[0].basename+ext:root+ext;
+                  } else
+                    if (inputs.crossbow_filelist != null){
+                      root = inputs.crossbow_filelist.basename.split('.').slice(0,-1).join('.');
+                      return (root == "")?inputs.crossbow_filelist.basename+ext:root+ext;
+                    } else {
+                      return null;
+                    }
+      };
 
 hints:
 - class: DockerRequirement
@@ -784,6 +787,16 @@ inputs:
 
 outputs:
 
+  error_msg:
+    type: File?
+    outputBinding:
+      glob: "error_msg.txt"
+
+  error_report:
+    type: File?
+    outputBinding:
+      glob: "error_report.txt"
+
   sam_file:
     type: File?
     outputBinding:
@@ -853,8 +866,11 @@ outputs:
           return parseInt(self[0].contents.match(totalRegex)[0].split(" ")[1]);
         }
 
-baseCommand:
-  - bowtie
+
+baseCommand: [bowtie]
+stdout: error_msg.txt
+stderr: error_msg.txt
+
 
 arguments:
   - valueFrom: |
@@ -880,55 +896,8 @@ arguments:
     position: 100000
     shellQuote: false
 
-$namespaces:
-  s: http://schema.org/
 
-$schemas:
-- https://github.com/schemaorg/schemaorg/raw/main/data/releases/11.01/schemaorg-current-http.rdf
-
-s:mainEntity:
-  $import: ./metadata/bowtie-metadata.yaml
-
-s:name: "bowtie"
-s:downloadUrl: https://raw.githubusercontent.com/Barski-lab/workflows/master/tools/bowtie.cwl
-s:codeRepository: https://github.com/Barski-lab/workflows
-s:license: http://www.apache.org/licenses/LICENSE-2.0
-
-s:isPartOf:
-  class: s:CreativeWork
-  s:name: Common Workflow Language
-  s:url: http://commonwl.org/
-
-s:creator:
-- class: s:Organization
-  s:legalName: "Cincinnati Children's Hospital Medical Center"
-  s:location:
-  - class: s:PostalAddress
-    s:addressCountry: "USA"
-    s:addressLocality: "Cincinnati"
-    s:addressRegion: "OH"
-    s:postalCode: "45229"
-    s:streetAddress: "3333 Burnet Ave"
-    s:telephone: "+1(513)636-4200"
-  s:logo: "https://www.cincinnatichildrens.org/-/media/cincinnati%20childrens/global%20shared/childrens-logo-new.png"
-  s:department:
-  - class: s:Organization
-    s:legalName: "Allergy and Immunology"
-    s:department:
-    - class: s:Organization
-      s:legalName: "Barski Research Lab"
-      s:member:
-      - class: s:Person
-        s:name: Andrey Kartashov
-        s:email: mailto:Andrey.Kartashov@cchmc.org
-        s:sameAs:
-        - id: http://orcid.org/0000-0001-9102-5681
-      - class: s:Person
-        s:name: Michael Kotliar
-        s:email: mailto:misha.kotliar@gmail.com
-        s:sameAs:
-        - id: http://orcid.org/0000-0002-6486-3898
-
+label: "bowtie-alignreads"
 doc: |
   Tool maps input raw reads files to reference genome using Bowtie.
 
@@ -946,7 +915,6 @@ doc: |
   `indices_folder` defines folder to contain Bowtie indices. Based on the first found file with `rev.1.ebwt` or
   `rev.1.ebwtl` extension, bowtie index prefix is returned from input's `valueFrom` field.
 
-s:about: |
   Usage:
   bowtie [options]* <ebwt> {-1 <m1> -2 <m2> | --12 <r> | <s>} [<hit>]
 
