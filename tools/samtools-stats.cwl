@@ -27,7 +27,7 @@ inputs:
     type: string?
     default: |
       #!/bin/bash
-      exec 1>> error_msg.txt 2>>&1
+      exec 1> error_msg.txt 2>&1
       printf "samtools-stats.cwl\n$(date)\n"
       samtools stats $0 > all_statistics.log
       cat all_statistics.log | grep SN | cut -f 2- > sn_section.log
@@ -54,7 +54,7 @@ inputs:
 
 outputs:
 
-  error_msg:
+  error_msg_file:
     type: File?
     outputBinding:
       glob: "error_msg.txt"

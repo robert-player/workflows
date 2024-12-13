@@ -36,7 +36,7 @@ inputs:
     type: string?
     default: |
       #!/bin/bash
-      exec 1>> error_msg.txt 2>>&1
+      exec 1> error_msg.txt 2>&1
       printf "samtools-sort-index.cwl\n$(date)\nbash_script_sort\n"
       if [ "$0" = "true" ]
       then
@@ -57,7 +57,7 @@ inputs:
     type: string?
     default: |
       #!/bin/bash
-      exec 1>> error_msg.txt 2>>&1
+      exec 1> error_msg.txt 2>&1
       printf "samtools-sort-index.cwl\n$(date)\nbash_script_index\n"
       if [ "$0" = "true" ]
       then
@@ -139,7 +139,7 @@ inputs:
 
 outputs:
 
-  error_msg:
+  error_msg_file:
     type: File?
     outputBinding:
       glob: "error_msg.txt"

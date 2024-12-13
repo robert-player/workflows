@@ -19,7 +19,7 @@ inputs:
     type: string?
     default: |
       #!/bin/bash
-      exec 1>> error_msg.txt 2>>&1
+      exec 1> error_msg.txt 2>&1
       printf "htseq-count.cwl\n$(date)\n"
       shopt -s nocaseglob
       set -- "$0" "$@"
@@ -209,7 +209,7 @@ inputs:
 
 outputs:
   
-  error_msg:
+  error_msg_file:
     type: File?
     outputBinding:
       glob: "error_msg.txt"
