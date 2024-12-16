@@ -31,7 +31,7 @@ outputs:
     outputBinding:
       glob: "error_msg.txt"
 
-  error_report_file:
+  error_report:
     type: File?
     outputBinding:
       glob: "error_report.txt"
