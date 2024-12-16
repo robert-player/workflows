@@ -56,20 +56,14 @@ outputs:
     label: "compressed and tarred kraken2 database directory file for download and use outside of scidap"
     outputSource: download_k2db/compressed_k2db_tar
 
-  log_stdout:
+  stderr_stdout_messages:
     type: File
     format: "http://edamontology.org/format_2330"
     label: "stdout logfile"
-    outputSource: download_k2db/log_file_stdout
+    outputSource: download_k2db/error_msg
     'sd:visualPlugins':
     - markdownView:
-        tab: 'Overview'
-
-  log_stderr:
-    type: File
-    format: "http://edamontology.org/format_2330"
-    label: "stderr logfile"
-    outputSource: download_k2db/log_file_stderr     
+        tab: 'Overview' 
 
 
 steps:
@@ -83,55 +77,10 @@ steps:
     out:
       - k2db
       - compressed_k2db_tar
-      - log_file_stdout
-      - log_file_stderr
+      - error_msg
 
 
-$namespaces:
-  s: http://schema.org/
-
-$schemas:
-- https://github.com/schemaorg/schemaorg/raw/main/data/releases/11.01/schemaorg-current-http.rdf
-
-s:name: "Kraken2 Database installation pipeline"
 label: "Kraken2 Database installation pipeline"
-s:alternateName: "Kraken2 Database Download"
-
-s:downloadUrl: https://github.com/datirium/workflows/tree/master/workflows/workflows/kraken2-databases.cwl
-s:codeRepository: https://github.com/datirium/workflows
-s:license: http://www.apache.org/licenses/LICENSE-2.0
-
-s:isPartOf:
-  class: s:CreativeWork
-  s:name: Common Workflow Language
-  s:url: http://commonwl.org/
-
-s:creator:
-- class: s:Organization
-  s:legalName: "Datirium LLC"
-  s:location:
-  - class: s:PostalAddress
-    s:addressCountry: "USA"
-    s:addressLocality: "Cincinnati"
-    s:addressRegion: "OH"
-    s:postalCode: ""
-    s:streetAddress: ""
-    s:telephone: ""
-  s:logo: "https://avatars.githubusercontent.com/u/33202955?s=200&v=4"
-  s:department:
-  - class: s:Organization
-    s:legalName: "Datirium LLC"
-    s:department:
-    - class: s:Organization
-      s:legalName: "Bioinformatics"
-      s:member:
-      - class: s:Person
-        s:name: Robert Player
-        s:email: mailto:support@datirium.com
-        s:sameAs:
-        - id: https://orcid.org/0000-0001-5872-259X
-
-
 doc: |
   This workflow downloads the user-selected pre-built kraken2 database from: https://benlangmead.github.io/aws-indexes/k2
 

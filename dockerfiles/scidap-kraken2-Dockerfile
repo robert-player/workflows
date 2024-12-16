@@ -31,6 +31,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /tmp
 
+COPY ./scripts/run_kraken2download.sh /usr/local/bin/
+
 ### Installing dependencies
 RUN apt-get update && \
     apt -y install libgcc-10-dev libxml2-dev libcurl4-openssl-dev libssl-dev pandoc && \
@@ -43,6 +45,8 @@ RUN apt-get update && \
     cd Krona/KronaTools/ && \
     ./install.pl && \
 ### Installing and permitting scripts
+    chmod +x /usr/local/bin/run_kraken2download.sh && \
+    ls -la /usr/local/bin/run_kraken2download.sh && \
 ### Cleaning
     apt-get clean && \
     apt-get purge && \
