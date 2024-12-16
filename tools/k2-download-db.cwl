@@ -12,7 +12,7 @@ requirements:
 
 hints:
 - class: DockerRequirement
-  dockerPull: robertplayer/scidap-kraken2:v1.0.0
+  dockerPull: robertplayer/scidap-kraken2:dev
 
 
 inputs:
@@ -31,7 +31,7 @@ outputs:
     outputBinding:
       glob: "error_msg.txt"
 
-  error_report:
+  error_report_file:
     type: File?
     outputBinding:
       glob: "error_report.txt"
