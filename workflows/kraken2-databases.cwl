@@ -56,7 +56,7 @@ outputs:
     label: "compressed and tarred kraken2 database directory file for download and use outside of scidap"
     outputSource: download_k2db/compressed_k2db_tar
 
-  stderr_stdout_files:
+  stderr_stdout_file:
     type: File
     format: "http://edamontology.org/format_2330"
     label: "stdout logfile"

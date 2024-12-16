@@ -31,7 +31,7 @@ outputs:
     outputBinding:
       glob: "error_msg.txt"
 
-  error_report:
+  error_report_file:
     type: File?
     outputBinding:
       glob: "error_report.txt"
@@ -47,7 +47,7 @@ outputs:
       glob: "*.tar.gz"
 
 
-baseCommand: [run_kraken2download.sh]
+baseCommand: [bash /usr/local/bin/run_kraken2download.sh]
 
 
 label: "k2-download-db"
