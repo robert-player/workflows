@@ -229,7 +229,7 @@ outputs:
         name: "BAM Track"
         displayMode: "SQUISHED"
 
-  bowtie_log:
+  bowtie_log_file:
     type: File
     format: "http://edamontology.org/format_2330"
     label: "Bowtie alignment log"

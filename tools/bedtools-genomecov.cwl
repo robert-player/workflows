@@ -165,24 +165,12 @@ inputs:
 
 outputs:
 
-  error_msg:
-    type: File?
-    outputBinding:
-      glob: "error_msg.txt"
-
-  error_report:
-    type: File?
-    outputBinding:
-      glob: "error_report.txt"
-
   genome_coverage_file:
     type: stdout
     doc: |
       Generated genome coverage output file
 
 baseCommand: ["bedtools", "genomecov"]
-stdout: error_msg.txt
-stderr: error_msg.txt
 
 
 label: "bedtools-genomecov"
