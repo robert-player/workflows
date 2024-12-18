@@ -41,7 +41,7 @@ outputs:
     outputBinding:
       glob: "k2db"
 
-  compressed_k2db_tarball:
+  compressed_k2db_tar:
     type: File
     outputBinding:
       glob: "*.tar.gz"

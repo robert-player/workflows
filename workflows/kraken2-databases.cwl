@@ -54,7 +54,7 @@ outputs:
   compressed_k2db_tar:
     type: File
     label: "compressed and tarred kraken2 database directory file for download and use outside of scidap"
-    outputSource: download_k2db/compressed_k2db_tarball
+    outputSource: download_k2db/compressed_k2db_tar
 
   stderr_stdout_messages:
     type: File
@@ -68,7 +68,7 @@ outputs:
 
 steps:
 
-  download_db:
+  download_k2db:
     run: ../tools/k2-download-db.cwl
     in:
       user_selection:
@@ -76,7 +76,7 @@ steps:
         valueFrom: $(self)
     out:
       - k2db
-      - compressed_k2db_tarball
+      - compressed_k2db_tar
       - error_msg
 
 
