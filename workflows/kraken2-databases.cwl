@@ -49,26 +49,17 @@ outputs:
   k2db:
     type: Directory
     label: "decompressed and untarred kraken2 database directory used as input for kraken2 classification"
-    outputSource: download_k2db/k2db
+    outputSource: download_db/k2db
 
   compressed_k2db_tar:
     type: File
     label: "compressed and tarred kraken2 database directory file for download and use outside of scidap"
-    outputSource: download_k2db/compressed_k2db_tar
-
-  stderr_stdout_messages:
-    type: File
-    format: "http://edamontology.org/format_2330"
-    label: "stdout logfile"
-    outputSource: download_k2db/error_msg
-    'sd:visualPlugins':
-    - markdownView:
-        tab: 'Overview' 
+    outputSource: download_db/compressed_k2db_tarball
 
 
 steps:
 
-  download_k2db:
+  download_db:
     run: ../tools/k2-download-db.cwl
     in:
       user_selection:
@@ -76,8 +67,7 @@ steps:
         valueFrom: $(self)
     out:
       - k2db
-      - compressed_k2db_tar
-      - error_msg
+      - compressed_k2db_tarball
 
 
 label: "Kraken2 Database installation pipeline"
