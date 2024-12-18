@@ -1,6 +1,6 @@
 #!/bin/bash
-exec 1> error_msg.txt 2>&1
-printf "k2-download-db.cwl\n$(date)\n"
+printf "k2-download-db.cwl\n$(date)\n"          # prints tool name/date to stdout (error_report.txt)
+printf "k2-download-db.cwl\n$(date)\n" 1>&2     # prints tool name/date to stderr (error_msg.txt)
 
 #	FUNCTIONS
 #===============================================================================
@@ -30,8 +30,7 @@ do
 done
 # arg checks
 if [[ "$DATABASE" == "" ]]; then
-    echo "Required param (-d) missing. Exiting."
-    echo "Missing Database input parameter (-d)" > error_report.txt
+    echo "Missing required Database input param (-d). Exiting."
     exit
 fi
 
@@ -65,7 +64,7 @@ fi
 printf "Downloading Kraken2 $DATABASE database from: $url\n\n"
 wget $url
 if [[ $? == 1 ]]; then
-    printf "Error from wget, possible URL (tried: '$url') issue.\n\nPlease check error_msg.txt file for details." > error_report.txt
+    printf "Error from wget, possible URL (tried: '$url') issue.\n\nPlease check error_msg.txt file for details."
     exit
 fi
 mkdir ./k2db
