@@ -41,13 +41,15 @@ outputs:
     outputBinding:
       glob: "k2db"
 
-  compressed_k2db_tar:
+  compressed_k2db_tarball:
     type: File
     outputBinding:
       glob: "*.tar.gz"
 
 
 baseCommand: ["/usr/local/bin/run_kraken2download.sh"]
+stdout: error_report.txt
+stderr: error_msg.txt
 
 
 label: "k2-download-db"
