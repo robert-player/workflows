@@ -22,59 +22,42 @@
 
 
 ### Base Image
-FROM biowardrobe2/fastx_toolkit:v0.0.14
+FROM scidap/trimgalore:v0.6.6
 LABEL maintainer="robert.player@datirium.com"
 ENV DEBIAN_FRONTEND noninteractive
 
-### Trimgalore related ENV variables
-# install trimgalore
-ENV VERSION_FQC 0.11.5
-ENV NAME_FQC fastqc
-ENV URL_FQC "http://www.bioinformatics.babraham.ac.uk/projects/${NAME_FQC}/${NAME_FQC}_v${VERSION_FQC}.zip"
+### fastx toolkit related ENV variables
+ENV VERSION 0.0.14
+ENV NAME fastx_toolkit
+ENV URL "https://github.com/agordon/fastx_toolkit/releases/download/${VERSION}/${NAME}-${VERSION}.tar.bz2"
 
-ENV VERSION_CADP 1.13
-ENV NAME_CADP cutadapt
-
-ENV VERSION_TRG 0.4.4
-ENV NAME_TRG trim_galore
-ENV URL_TRG "https://www.bioinformatics.babraham.ac.uk/projects/${NAME_TRG}/${NAME_TRG}_v${VERSION_TRG}.zip"
 
 ################## BEGIN INSTALLATION ######################
 
 WORKDIR /tmp
 
-COPY ./scripts/run_kraken2download.sh /usr/local/bin/
+COPY ./scripts/run_extractandtrimpe.sh /usr/local/bin/
 
-### Installing dependencies
-RUN apt-get update && \
-    apt -y install libgcc-10-dev libxml2-dev libcurl4-openssl-dev libssl-dev pandoc && \
-    apt -y install p7zip-full && \
-    git clone https://github.com/jenniferlu717/KrakenTools.git && \
-    mv KrakenTools/ /usr/local/src/ && \
-    pip install biopython && \
-    cd /usr/local/src/ && \
-    git clone https://github.com/marbl/Krona.git && \
-    cd Krona/KronaTools/ && \
-    ./install.pl && \
+### Installing 7z package and fastx toolkit install
+RUN apt-get clean all && \
+    apt-get update && \
+    apt-get install -y libgtextutils-dev p7zip-full && \
+    apt-get clean && \
+    apt-get purge && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN wget -q -O - $URL | tar -jxv && \
+    cd ${NAME}-${VERSION} && \
+    ./configure --prefix=/usr/local/ && \
+    make -j 4 && \
+    make install && \
+    cd .. && \
+    rm -rf ./${NAME}-${VERSION}/ && \
+    strip /usr/local/bin/*; true
+
 ### Installing and permitting scripts
-    chmod +x /usr/local/bin/run_kraken2download.sh && \
-    ls -la /usr/local/bin/run_kraken2download.sh && \
-### Trimgalore install
-    wget -q -O /opt/${NAME_FQC}_v${VERSION_FQC}.zip ${URL_FQC} && \
-    cd /opt && \
-    unzip ./${NAME_FQC}_v${VERSION_FQC}.zip &&\
-    chmod 777 /opt/FastQC/${NAME_FQC} && \
-    ln -s /opt/FastQC/${NAME_FQC} /usr/local/bin/ &&\
-    rm /opt/${NAME_FQC}_v${VERSION_FQC}.zip &&\
-    pip install setuptools &&\
-    pip install --upgrade pip &&\
-    pip install ${NAME_CADP}==${VERSION_CADP} &&\
-    mkdir /opt/${NAME_TRG} &&\
-    wget --no-check-certificate -q -O /opt/${NAME_TRG}/${NAME_TRG}_v${VERSION_TRG}.zip ${URL_TRG} && \
-    cd /opt/${NAME_TRG} && \
-    unzip ./${NAME_TRG}_v${VERSION_TRG}.zip &&\
-    chmod 777 /opt/${NAME_TRG}/${NAME_TRG} && \
-    ln -s /opt/${NAME_TRG}/${NAME_TRG} /usr/local/bin/ && \
+RUN chmod +x /usr/local/bin/run_extractandtrimpe.sh && \
+    ls -la /usr/local/bin/run_extractandtrimpe.sh && \
 ### Cleaning
     apt-get clean && \
     apt-get purge && \
