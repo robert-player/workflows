@@ -7,7 +7,7 @@
 # Website:          https://github.com/datirium/workflows
 # Provides:         PE FASTQ extraction and trimming
 # Base Image:       biowardrobe2/fastx_toolkit:v0.0.14
-# Build Cmd:        docker build --no-cache --rm -t etpe-dev -f scidap-etpe-Dockerfile . > ../../dockerbuild-etpe.log 2>&1
+# Build Cmd:        docker build --no-cache --rm -t etpe-dev -f scidap-extractandtrimpe-Dockerfile . > ../../dockerbuild-extractandtrimpe.log 2>&1
 # Run Cmd:          docker run --rm -ti etpe-dev /bin/bash
 # Push Cmd1:        docker tag etpe-dev robertplayer/scidap-etpe:dev
 #      Cmd2:        docker image push robertplayer/scidap-etpe:dev
@@ -26,6 +26,18 @@ FROM biowardrobe2/fastx_toolkit:v0.0.14
 LABEL maintainer="robert.player@datirium.com"
 ENV DEBIAN_FRONTEND noninteractive
 
+### Trimgalore related ENV variables
+# install trimgalore
+ENV VERSION_FQC 0.11.5
+ENV NAME_FQC fastqc
+ENV URL_FQC "http://www.bioinformatics.babraham.ac.uk/projects/${NAME_FQC}/${NAME_FQC}_v${VERSION_FQC}.zip"
+
+ENV VERSION_CADP 1.13
+ENV NAME_CADP cutadapt
+
+ENV VERSION_TRG 0.4.4
+ENV NAME_TRG trim_galore
+ENV URL_TRG "https://www.bioinformatics.babraham.ac.uk/projects/${NAME_TRG}/${NAME_TRG}_v${VERSION_TRG}.zip"
 
 ################## BEGIN INSTALLATION ######################
 
@@ -47,28 +59,8 @@ RUN apt-get update && \
 ### Installing and permitting scripts
     chmod +x /usr/local/bin/run_kraken2download.sh && \
     ls -la /usr/local/bin/run_kraken2download.sh && \
-### Cleaning
-    apt-get clean && \
-    apt-get purge && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* && \
-    strip /usr/local/bin/*; true
-
-
-
-# install trimgalore
-ENV VERSION_FQC 0.11.5
-ENV NAME_FQC fastqc
-ENV URL_FQC "http://www.bioinformatics.babraham.ac.uk/projects/${NAME_FQC}/${NAME_FQC}_v${VERSION_FQC}.zip"
-
-ENV VERSION_CADP 1.13
-ENV NAME_CADP cutadapt
-
-ENV VERSION_TRG 0.4.4
-ENV NAME_TRG trim_galore
-ENV URL_TRG "https://www.bioinformatics.babraham.ac.uk/projects/${NAME_TRG}/${NAME_TRG}_v${VERSION_TRG}.zip"
-
-
-RUN wget -q -O /opt/${NAME_FQC}_v${VERSION_FQC}.zip ${URL_FQC} && \
+### Trimgalore install
+    wget -q -O /opt/${NAME_FQC}_v${VERSION_FQC}.zip ${URL_FQC} && \
     cd /opt && \
     unzip ./${NAME_FQC}_v${VERSION_FQC}.zip &&\
     chmod 777 /opt/FastQC/${NAME_FQC} && \
@@ -82,4 +74,9 @@ RUN wget -q -O /opt/${NAME_FQC}_v${VERSION_FQC}.zip ${URL_FQC} && \
     cd /opt/${NAME_TRG} && \
     unzip ./${NAME_TRG}_v${VERSION_TRG}.zip &&\
     chmod 777 /opt/${NAME_TRG}/${NAME_TRG} && \
-    ln -s /opt/${NAME_TRG}/${NAME_TRG} /usr/local/bin/
+    ln -s /opt/${NAME_TRG}/${NAME_TRG} /usr/local/bin/ && \
+### Cleaning
+    apt-get clean && \
+    apt-get purge && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* && \
+    strip /usr/local/bin/*; true
