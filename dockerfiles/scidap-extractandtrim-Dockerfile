@@ -38,7 +38,11 @@ WORKDIR /tmp
 
 COPY ./scripts/run_extractandtrimpe.sh /usr/local/bin/
 
-### Installing 7z package and fastx toolkit install
+### Installing and permitting scripts
+RUN chmod +x /usr/local/bin/run_extractandtrimpe.sh && \
+    ls -la /usr/local/bin/run_extractandtrimpe.sh
+
+### Installing 7z package and other dependencies
 RUN apt-get clean all && \
     apt-get update && \
     apt-get install -y libgtextutils-dev p7zip-full && \
@@ -46,16 +50,8 @@ RUN apt-get clean all && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+### Installing 7z package and fastx toolkit install
 RUN cd /usr/local/bin && \
     wget -q -O - $URL | tar -jxv && \
     cd ${NAME}-${VERSION} && \
     ./configure --prefix=/usr/local/
-
-### Installing and permitting scripts
-RUN chmod +x /usr/local/bin/run_extractandtrimpe.sh && \
-    ls -la /usr/local/bin/run_extractandtrimpe.sh && \
-### Cleaning
-    apt-get clean && \
-    apt-get purge && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* && \
-    strip /usr/local/bin/*; true
