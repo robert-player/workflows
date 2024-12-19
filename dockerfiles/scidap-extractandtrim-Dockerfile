@@ -50,7 +50,7 @@ RUN apt-get clean all && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-### Installing 7z package and fastx toolkit install
+### Installing fastx toolkit
 RUN cd /usr/local/bin && \
     wget -q -O - $URL | tar -jxv && \
     cd ${NAME}-${VERSION} && \
