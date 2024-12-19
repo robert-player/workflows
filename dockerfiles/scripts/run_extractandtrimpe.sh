@@ -76,7 +76,7 @@ printf "\n\n"
 
 
 printf "\tTrimgalore extracted and concatentated paired-end reads\n"
-trim_galore "extracted_combined_R1.fastq" "extracted_combined_R2.fastq" --dont_gzip --length 30 --paired --cores 10
+trim_galore "extracted_combined_R1.fastq" "extracted_combined_R2.fastq" --dont_gzip --length 30 --paired --cores 8
 # outputs are:
 #   extracted_combined_R1_val_1.fq
 #   extracted_combined_R2_val_2.fq
