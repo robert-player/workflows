@@ -65,12 +65,12 @@ COMBINED="extracted_combined_R1.fastq"
 for FILE in "$R1"; do
     echo "Extracting:" $FILE;
     extract "${FILE}" "${COMBINED}"
-done &
+done
 COMBINED="extracted_combined_R2.fastq"
 for FILE in "$R2"; do
     echo "Extracting:" $FILE;
     extract "${FILE}" "${COMBINED}"
-done &
+done
 printf "\n\n"
 
 
