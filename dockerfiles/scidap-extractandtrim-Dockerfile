@@ -54,4 +54,6 @@ RUN apt-get clean all && \
 RUN cd /usr/local/bin && \
     wget -q -O - $URL | tar -jxv && \
     cd ${NAME}-${VERSION} && \
-    ./configure --prefix=/usr/local/
+    ./configure --prefix=/usr/local/ && \
+    make && \
+    ln -s /usr/local/bin/${NAME}-${VERSION}/src/fastx_quality_stats/fastx_quality_stats /usr/local/bin/fastx_quality_stats
