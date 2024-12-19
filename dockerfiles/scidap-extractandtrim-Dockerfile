@@ -46,7 +46,8 @@ RUN apt-get clean all && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN wget -q -O - $URL | tar -jxv && \
+RUN cd /usr/local/bin && \
+    wget -q -O - $URL | tar -jxv && \
     cd ${NAME}-${VERSION} && \
     ./configure --prefix=/usr/local/
 
