@@ -93,12 +93,12 @@ fi
 
 
 printf "\tRunning fastx_quality_stats from Fastx Toolkit on trimmed reads\n"
-fastx_quality_stats -N -i extracted_combined_R1_val_1.fq -o fastx_quality_stats_r1.tsv &
+fastx_quality_stats -N -i extracted_combined_R1_val_1.fq -o fastx_quality_stats_r1.tsv
 if [[ $? == 1 ]]; then
     printf "Non-zero exit status from fastx_quality_stats execution on trimmed r1 file.\n\nPlease check error_msg.txt file for details."
     exit
 fi
-fastx_quality_stats -N -i extracted_combined_R2_val_2.fq -o fastx_quality_stats_r2.tsv &
+fastx_quality_stats -N -i extracted_combined_R2_val_2.fq -o fastx_quality_stats_r2.tsv
 if [[ $? == 1 ]]; then
     printf "Non-zero exit status from fastx_quality_stats execution on trimmed r2 file.\n\nPlease check error_msg.txt file for details."
     exit

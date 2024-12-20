@@ -81,4 +81,4 @@ stderr: error_msg.txt
 label: "extractandtrim-pe"
 doc: |
   Extracts compressed fastq paired-end read files and concatentates each pair if multiple files.
-  Runs each concatenated read pair files through trim galore, then generates and summarized read statistics on the result.
+  Runs each concatenated read pair file through trim galore, then generates summarized read statistics for the trimmed reads.
