@@ -75,13 +75,13 @@ printf "\n\n"
 
 
 
-printf "\tTrimgalore extracted and concatentated paired-end reads\n"
-trim_galore "extracted_combined_R1.fastq" "extracted_combined_R2.fastq" --dont_gzip --length 30 --paired --cores 8
-# outputs are:
+printf "\tTrim the extracted and concatentated paired-end reads with Trimgalore\n"
+# expected outputs are:
 #   extracted_combined_R1_val_1.fq
 #   extracted_combined_R2_val_2.fq
 #   extracted_combined_R1.fastq_trimming_report.txt
 #   extracted_combined_R2.fastq_trimming_report.txt
+trim_galore "extracted_combined_R1.fastq" "extracted_combined_R2.fastq" --dont_gzip --length 30 --paired --cores 8
 if [[ $? == 1 ]]; then
     printf "Non-zero exit status from trim_galore execution.\n\nPlease check error_msg.txt file for details."
     exit
